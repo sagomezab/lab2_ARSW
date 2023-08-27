@@ -10,6 +10,8 @@ public class Galgo extends Thread {
 	private int paso;
 	private Carril carril;
 	RegistroLlegada regl;
+	private int ubicacionGalgo;
+	private boolean detenerse = false; 
 
 	public Galgo(Carril carril, String name, RegistroLlegada reg) {
 		super(name);
@@ -23,13 +25,23 @@ public class Galgo extends Thread {
 			Thread.sleep(100);
 			carril.setPasoOn(paso++);
 			carril.displayPasos(paso);
+
+			synchronized(this){
+				while(detenerse){
+					this.wait();
+				}
+			}
 			
 			if (paso == carril.size()) {						
 				carril.finish();
-				int ubicacion=regl.getUltimaPosicionAlcanzada();
-				regl.setUltimaPosicionAlcanzada(ubicacion+1);
-				System.out.println("El galgo "+this.getName()+" llego en la posicion "+ubicacion);
-				if (ubicacion==1){
+				synchronized (regl){
+					int ubicacion=regl.getUltimaPosicionAlcanzada();
+					this.ubicacionGalgo = ubicacion;
+					regl.setUltimaPosicionAlcanzada(ubicacion+1);
+					System.out.println("El galgo "+this.getName()+" llego en la posicion "+ubicacion);
+				}
+				
+				if (ubicacionGalgo == 1){
 					regl.setGanador(this.getName());
 				}
 				
@@ -37,6 +49,16 @@ public class Galgo extends Thread {
 		}
 	}
 
+	public void detener(){
+		detenerse = true;
+	}
+
+	public void siga(){
+		synchronized(this){
+			detenerse = false;
+			notifyAll();
+		}
+	}
 
 	@Override
 	public void run() {

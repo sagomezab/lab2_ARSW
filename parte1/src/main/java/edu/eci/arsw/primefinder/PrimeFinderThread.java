@@ -41,8 +41,10 @@ public class PrimeFinderThread extends Thread{
 	}
 
 	public void stateContinue(){
-		execute = true;
-		notifyAll();
+		synchronized(this){
+			execute = true;
+			notifyAll();
+		}
 	}
 	
 	boolean isPrime(int n) {

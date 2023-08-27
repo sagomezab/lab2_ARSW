@@ -2,6 +2,8 @@ package arsw.threads;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 
@@ -38,6 +40,13 @@ public class MainCanodromo {
                                     galgos[i].start();
 
                                 }
+                                for (Galgo galgo : galgos){
+                                    try{
+                                        galgo.join();
+                                    }catch(InterruptedException e){
+                                        Logger.getLogger(MainCanodromo.class.getName()).log(Level.SEVERE, null, e);
+                                    }
+                                }
                                
 				can.winnerDialog(reg.getGanador(),reg.getUltimaPosicionAlcanzada() - 1); 
                                 System.out.println("El ganador fue:" + reg.getGanador());
@@ -53,6 +62,9 @@ public class MainCanodromo {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         System.out.println("Carrera pausada!");
+                        for (Galgo galgo: galgos){
+                            galgo.detener();
+                        }
                     }
                 }
         );
@@ -62,6 +74,9 @@ public class MainCanodromo {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         System.out.println("Carrera reanudada!");
+                        for (Galgo galgo: galgos){
+                            galgo.siga();
+                        }
                     }
                 }
         );

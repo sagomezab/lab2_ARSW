@@ -54,6 +54,8 @@ Taller.
 
     b.  Puede utilizarse el método join() de la clase Thread para sincronizar el hilo que inicia la carrera, con la finalización de los hilos de los galgos.
 
+    ![](img/CorrecionMensaje_Galgos.png)
+
 2.  Una vez corregido el problema inicial, corra la aplicación varias
     veces, e identifique las inconsistencias en los resultados de las
     mismas viendo el ‘ranking’ mostrado en consola (algunas veces
@@ -61,14 +63,37 @@ Taller.
     dichas inconsistencias). A partir de esto, identifique las regiones
     críticas () del programa.
 
+    * Al ejecutar el programa y revisar la terminal, encontramos que más de un galgo puede ocupar la misma posición.
+
+    * ![](img/Incosistencia_1.png)
+
+    * Al ejecutar el programa varias veces encontre que no cuenta el total de galgos correctamente.
+
+    * ![](img/Incosistencia_2.png)
+    * __Regiones Críticas__ <br>
+    Al consultar las posiciones, varios galgos pueden estar consultando al mismo tiempo y esto a su vez permite que se cuenten mal la cantidad de galgos que estan compitiendo.
+
 3.  Utilice un mecanismo de sincronización para garantizar que a dichas
     regiones críticas sólo acceda un hilo a la vez. Verifique los
     resultados.
+
+    * Se realizo en una sincronización en donde se pedian las ubicaciones la finalizar la carrera de los galgos, especifiamente en este sector de la clase Galgos <br>
+    ![](img/Sincronizacion_regioncritica.png)<br>
+    Además se realizaron diversas pruebas que demuestran que esa sincronización se realizo con exito, ya que se esta realizando de forma secuencial y no recurrente.<br>
+    ![](img/Prueba_sincronizacion.png)
 
 4.  Implemente las funcionalidades de pausa y continuar. Con estas,
     cuando se haga clic en ‘Stop’, todos los hilos de los galgos
     deberían dormirse, y cuando se haga clic en ‘Continue’ los mismos
     deberían despertarse y continuar con la carrera. Diseñe una solución que permita hacer esto utilizando los mecanismos de sincronización con las primitivas de los Locks provistos por el lenguaje (wait y notifyAll).
+
+    * __Pausar__<br>
+    El codigo se encuentra dentro de la carpeta, acá la prueba del funcionamiento del método.<br>
+    ![](img/pausa.png)
+
+    * __Continuar__<br>
+    El codigo se encuentra dentro de la carpeta, acá la prueba del funcionamiento del método.<br>
+    ![](img/continuar.png)
 
 
 ## Criterios de evaluación

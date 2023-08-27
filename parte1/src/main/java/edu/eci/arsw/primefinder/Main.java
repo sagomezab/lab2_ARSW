@@ -32,11 +32,13 @@ public class Main {
 		System.out.println("Press enter to activate the threads...");
 		String enter = scanner.nextLine();
 		
-		if (enter == " "){
+		if (enter.trim().isEmpty()){
+			System.out.println("Aca se reanuda.");
 			pft1.stateContinue();
 			pft2.stateContinue();
 			pft3.stateContinue();
 		}
+
 
 
 		
