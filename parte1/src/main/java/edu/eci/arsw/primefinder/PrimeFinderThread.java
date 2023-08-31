@@ -11,28 +11,41 @@ public class PrimeFinderThread extends Thread{
 	
 	private List<Integer> primes=new LinkedList<Integer>();
 	private Boolean execute = true;
+	private Integer key;
 
-	public PrimeFinderThread(int a, int b, int threadNumber) {
+	public PrimeFinderThread(int a, int b, int threadNumber, Integer key) {
 		super();
 		this.a = a;
 		this.b = b;
 		this.threadNumber = threadNumber;
+		this.key = key;
 	}
 
-	public synchronized void run(){
-		for (int i=a;i<=b;i++){						
-			if (isPrime(i)){
-				primes.add(i);
-				System.out.println("Thread number: " + threadNumber + " prime " + i);
-				while (!execute){
+
+	public void run(){
+		long start = System.currentTimeMillis();
+		for (int i=a;i<=b;i++){
+			long end = System.currentTimeMillis();
+			long elapsedTime = end - start;
+			if (elapsedTime < 5000){
+				if (isPrime(i)){
+					primes.add(i);
+					System.out.println("Thread Number: " + threadNumber + " prime " + i);
+				}	
+			}
+			else {
+				statePause();
+				synchronized (key){
 					try{	
-						wait();
+						key.wait();
+						start = System.currentTimeMillis();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					
 				}
+			}				
 
-			}
 		}
 	}
 
@@ -41,10 +54,11 @@ public class PrimeFinderThread extends Thread{
 	}
 
 	public void stateContinue(){
-		synchronized(this){
-			execute = true;
-			notifyAll();
-		}
+		execute = true;
+	}
+
+	public boolean isRunning(){
+		return execute;
 	}
 	
 	boolean isPrime(int n) {
